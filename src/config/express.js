@@ -34,7 +34,6 @@ module.exports = function () {
 
   // Require all new routes here
   require("../routes/game.route")(app);
-  require("../routes/user.route")(app);
 
   return app;
 };
