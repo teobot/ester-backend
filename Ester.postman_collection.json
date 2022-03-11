@@ -1,0 +1,180 @@
+{
+  "info": {
+    "_postman_id": "c6bd104e-85ec-4a8a-b6bc-34678635b9b1",
+    "name": "Ester",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Game",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{url}}/create/game",
+          "host": ["{{url}}"],
+          "path": ["create", "game"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "mark reveal",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"gameId\": \"622b4d0b5a2e638244c9f377\",\r\n    \"userId\": \"622b4d0b5a2e638244c9f376\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}/game/reveal",
+          "host": ["{{url}}"],
+          "path": ["game", "reveal"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "mark revote",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"gameId\": \"622b4d0b5a2e638244c9f377\",\r\n    \"userId\": \"622b4d0b5a2e638244c9f376\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}/game/revote",
+          "host": ["{{url}}"],
+          "path": ["game", "revote"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get game",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"joinCode\": \"Dx3P\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}/get/game",
+          "host": ["{{url}}"],
+          "path": ["get", "game"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "join game",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Theo\",\r\n    \"joinCode\": \"Dx3P\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}/game/join",
+          "host": ["{{url}}"],
+          "path": ["game", "join"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Vote",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"gameId\": \"622b4d0b5a2e638244c9f377\",\r\n    \"userId\": \"622b5b1289c99ebf18f06e9f\",\r\n    \"vote\": 1.1\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}/game/vote",
+          "host": ["{{url}}"],
+          "path": ["game", "vote"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "kick user",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"joinCode\": \"Dx3P\",\r\n    \"userId\": \"622b67b7dbca4ebc34668d4d\",\r\n    \"username\": \"Theo Clap\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}/game/user/kick",
+          "host": ["{{url}}"],
+          "path": ["game", "user", "kick"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "url",
+      "value": "http://localhost:3333/api/v1",
+      "type": "string"
+    }
+  ]
+}
