@@ -45,7 +45,7 @@ const createGame = async (req, res) => {
     // save the game
     await game.save();
 
-    return res.send(game.returnSafe());
+    return res.send(game);
   } catch (err) {
     return res.status(422).send({ error: err.message });
   }
@@ -54,7 +54,15 @@ const createGame = async (req, res) => {
 const revealAnswer = async (req, res) => {
   //  - reveals the estimate to the job
   try {
-    req.game.reveal = !req.game.reveal;
+    req.game.revote = false;
+    req.game.reveal = true;
+
+    // mark all users as not voted
+    req.game.users.map((user) => {
+      user.voted = false;
+    });
+
+    req.game.markModified("users");
 
     await req.game.save();
 
@@ -67,7 +75,15 @@ const revealAnswer = async (req, res) => {
 const startRevote = async (req, res) => {
   //  - trigger a revote on the estimate
   try {
-    req.game.revote = !req.game.revote;
+    req.game.revote = true;
+    req.game.reveal = false;
+
+    // mark all users as not voted
+    req.game.users.map((user) => {
+      user.voted = false;
+    });
+
+    req.game.markModified("users");
 
     await req.game.save();
 
@@ -164,5 +180,5 @@ module.exports = {
   getGame,
   joinGame,
   userVote,
-  kickUserFromGame
+  kickUserFromGame,
 };
