@@ -22,6 +22,15 @@ const generateRandomJoinCode = () => {
   return joinCode;
 };
 
+const colors = [
+  "#EDB9B9",
+  "#EDE8B9",
+  "#E6B9ED",
+  "#BDB9ED",
+  "#B9EDBE",
+  "#B9DDED",
+];
+
 const createGame = async (req, res) => {
   // - create a new game
   try {
@@ -45,7 +54,10 @@ const createGame = async (req, res) => {
     // save the game
     await game.save();
 
-    return res.send(game);
+    return res.send({
+      user: game.creator,
+      game: game,
+    });
   } catch (err) {
     return res.status(422).send({ error: err.message });
   }
@@ -66,7 +78,7 @@ const revealAnswer = async (req, res) => {
 
     await req.game.save();
 
-    return res.send(req.game.returnSafe());
+    return await getGame(req, res);
   } catch (err) {
     return res.status(422).send({ error: err.message });
   }
@@ -87,7 +99,7 @@ const startRevote = async (req, res) => {
 
     await req.game.save();
 
-    return res.send(req.game.returnSafe());
+    return await getGame(req, res);
   } catch (err) {
     return res.status(422).send({ error: err.message });
   }
@@ -96,7 +108,25 @@ const startRevote = async (req, res) => {
 const getGame = async (req, res) => {
   //  - get the game from the id
   try {
-    return res.send(req.game.returnSafe({ type: req.body.type || null }));
+    const { userId } = req.body;
+
+    // return different stuff based on what type the user is
+    let isCreator = req.game.creator._id.toString() === userId;
+    let isVoter = req.game.users.find((user) => user._id.toString() === userId)
+      ? true
+      : false;
+
+    if (isCreator) {
+      return res.send({
+        user: req.game.creator,
+        game: req.game,
+      });
+    } else if (isVoter) {
+      return res.send({
+        user: req.game.users.find((user) => user._id.toString() === userId),
+        game: req.game.returnForUser(userId),
+      });
+    }
   } catch (err) {
     return res.status(422).send({ error: err.message });
   }
@@ -109,6 +139,7 @@ const joinGame = async (req, res) => {
 
     const user = new User({
       name,
+      color: colors[Math.floor(Math.random() * colors.length)],
     });
 
     req.game.users.push(user);
@@ -116,11 +147,8 @@ const joinGame = async (req, res) => {
     await req.game.save();
 
     return res.send({
-      user: {
-        userId: user._id,
-        name: user.name,
-      },
-      game: req.game.returnSafe(),
+      user,
+      game: req.game.returnForUser(user._id),
     });
   } catch (err) {
     return res.status(422).send({ error: err.message });
@@ -144,7 +172,7 @@ const userVote = async (req, res) => {
 
     await req.game.save();
 
-    return res.send(req.game.returnSafe());
+    return await getGame(req, res);
   } catch (err) {
     return res.status(422).send({ error: err.message });
   }
@@ -153,21 +181,17 @@ const userVote = async (req, res) => {
 const kickUserFromGame = async (req, res) => {
   // - kick a user from the game
   try {
-    const { username } = req.body;
+    const { kickId } = req.body;
 
-    const user = req.game.users.find((user) => user.name === username);
-
-    if (!user) {
-      return res.status(422).send({ error: "User not found" });
-    }
-
-    req.game.users = req.game.users.filter((user) => user.name !== username);
+    req.game.users = req.game.users.filter(
+      (user) => user._id.toString() !== kickId
+    );
 
     req.game.markModified("users");
 
     await req.game.save();
 
-    return res.send(req.game.returnSafe());
+    return await getGame(req, res);
   } catch (err) {
     return res.status(422).send({ error: err.message });
   }

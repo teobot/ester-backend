@@ -60,4 +60,18 @@ GameSchema.methods.returnSafe = function (options = null) {
   return safeGame;
 };
 
+GameSchema.methods.returnForUser = function (userId) {
+  const safeGame = this.toObject();
+
+  delete safeGame.creator;
+  delete safeGame.users;
+
+  delete safeGame.joinCode;
+
+  // remove the version
+  delete safeGame.__v;
+
+  return safeGame;
+};
+
 mongoose.model(`Game`, GameSchema);

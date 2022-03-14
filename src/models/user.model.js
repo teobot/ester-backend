@@ -18,6 +18,10 @@ const UserSchema = new mongoose.Schema({
     enum: ["creator", "user"],
     default: "user",
   },
+  color: {
+    type: String,
+    default: "",
+  }
 });
 
 // export the schema

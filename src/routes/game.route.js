@@ -41,4 +41,9 @@ module.exports = function (app) {
   app
     .route("/api/" + version + "/game/user/kick")
     .post(requireGame, requireCreator, controller.kickUserFromGame);
+
+  // kick user from game
+  app
+    .route("/api/" + version + "/game/user/remove")
+    .post(requireGame, requireCreator, controller.kickUserFromGame);
 };
