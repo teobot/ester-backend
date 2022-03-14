@@ -12,7 +12,7 @@ module.exports = function (app) {
   // Get game
   app
     .route("/api/" + version + "/get/game")
-    .get(requireGame, controller.getGame);
+    .post(requireGame, controller.getGame);
 
   // create game
   app.route("/api/" + version + "/create/game").post(controller.createGame);
