@@ -27,20 +27,29 @@ const GameSchema = new mongoose.Schema({
   },
 });
 
-GameSchema.methods.returnSafe = function () {
+GameSchema.methods.returnSafe = function (options = null) {
   // remove anything that is not safe to share
   const safeGame = this.toObject();
 
   // remove creator details
   delete safeGame.creator;
 
-  // remove user ids
-  safeGame.users = safeGame.users.map((user) => {
-    // remove the user id and type from the return
-    delete user._id;
-    delete user.type;
-    return user;
-  });
+  if (options) {
+    if (options.type === "mobile") {
+      // remove the user data
+      delete safeGame.users;
+    }
+  }
+
+  if (safeGame.users) {
+    // remove user ids
+    safeGame.users = safeGame.users.map((user) => {
+      // remove the user id and type from the return
+      delete user._id;
+      delete user.type;
+      return user;
+    });
+  }
 
   // remove the join code and id of the game
   delete safeGame._id;

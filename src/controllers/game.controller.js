@@ -96,7 +96,7 @@ const startRevote = async (req, res) => {
 const getGame = async (req, res) => {
   //  - get the game from the id
   try {
-    return res.send(req.game.returnSafe());
+    return res.send(req.game.returnSafe({ type: req.body.type || null }));
   } catch (err) {
     return res.status(422).send({ error: err.message });
   }
