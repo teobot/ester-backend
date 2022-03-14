@@ -13,7 +13,7 @@ module.exports = async (req, res, next) => {
     return res.status(422).send({ error: "game has no users" });
   }
 
-  let isUser = req.game.users.find((user) => user._id.toString() !== userId);
+  let isUser = req.game.users.find((user) => user._id !== userId);
 
   // check if the user is in the game
   if (!isUser) {

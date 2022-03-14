@@ -2,6 +2,8 @@ const config = require("./config.js");
 const version = config.get("version");
 
 const express = require("express");
+const socket = require("./socket");
+const { createServer } = require("http");
 
 const allowCrossOriginRequests = (req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
@@ -16,7 +18,7 @@ const allowCrossOriginRequests = (req, res, next) => {
   next();
 };
 
-module.exports = function () {
+module.exports = function (io) {
   const app = express();
 
   app.use(express.json());
@@ -30,6 +32,11 @@ module.exports = function () {
 
   app.get("/api/" + version, function (req, res) {
     return res.send({ msg: "Server up" });
+  });
+
+  app.use((req, res, next) => {
+    req.io = io;
+    next();
   });
 
   // Require all new routes here

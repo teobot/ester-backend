@@ -1,6 +1,7 @@
 var jwt = require("jsonwebtoken");
 
 const mongoose = require("mongoose");
+const socket = require("../config/socket");
 
 const Game = mongoose.model("Game");
 const User = mongoose.model("User");
@@ -76,6 +77,10 @@ const revealAnswer = async (req, res) => {
 
     req.game.markModified("users");
 
+    req.io.sockets.emit(req.game._id, {
+      type: "game:reveal",
+    });
+
     await req.game.save();
 
     return await getGame(req, res);
@@ -96,6 +101,10 @@ const startRevote = async (req, res) => {
     });
 
     req.game.markModified("users");
+
+    req.io.sockets.emit(req.game._id, {
+      type: "game:revote",
+    });
 
     await req.game.save();
 
@@ -146,6 +155,10 @@ const joinGame = async (req, res) => {
 
     await req.game.save();
 
+    await req.io.sockets.emit(req.game._id, {
+      type: "user:joined",
+    });
+
     return res.send({
       user,
       game: req.game.returnForUser(user._id),
@@ -171,6 +184,10 @@ const userVote = async (req, res) => {
     req.game.markModified("users");
 
     await req.game.save();
+
+    await req.io.sockets.emit(req.game._id, {
+      type: "user:vote",
+    });
 
     return await getGame(req, res);
   } catch (err) {

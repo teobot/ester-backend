@@ -9,7 +9,7 @@ const requireCreator = require("../middlewares/requireCreator");
 const requireUser = require("../middlewares/requireUser");
 
 module.exports = function (app) {
-  // Get game
+  // Get game and pass io to the controller function
   app
     .route("/api/" + version + "/get/game")
     .post(requireGame, controller.getGame);
