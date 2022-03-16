@@ -6,7 +6,9 @@ const dotenv = require("dotenv").config(),
   { createServer } = require("http"),
   { Server } = require("socket.io");
 
-const httpServer = createServer();
+const app = express();
+
+const httpServer = createServer(app);
 
 const io = new Server(httpServer, {
   /* options */
@@ -15,11 +17,17 @@ const io = new Server(httpServer, {
   },
 });
 
-io.on("connection", (socket) => {
-  console.log(`user ${socket.id} connected`);
+app.use((req, res, next) => {
+  req.io = io;
+  next();
 });
 
-const app = express(io);
+io.on("connection", (socket) => {
+  console.log("a user connected");
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
+});
 
 db.connect(function (err) {
   if (err) {
@@ -27,11 +35,7 @@ db.connect(function (err) {
     process.exit(1);
   } else {
     const expressPort = process.env.PORT || 3333;
-    const socketPort = process.env.SOCKET_PORT || 8000;
-    httpServer.listen(socketPort, function () {
-      console.log("Socket server listening on port " + socketPort);
-    });
-    app.listen(expressPort, function () {
+    httpServer.listen(expressPort, function () {
       console.log(`API Ver: ${version}; Listening on port: ${expressPort}`);
       console.log(
         `Connect Via : http://localhost:${expressPort}/api/${version}`

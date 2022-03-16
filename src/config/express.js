@@ -34,11 +34,6 @@ module.exports = function (io) {
     return res.send({ msg: "Server up" });
   });
 
-  app.use((req, res, next) => {
-    req.io = io;
-    next();
-  });
-
   // Require all new routes here
   require("../routes/game.route")(app);
 
