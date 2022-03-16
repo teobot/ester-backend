@@ -7,9 +7,7 @@ const dotenv = require("dotenv").config(),
   { Server } = require("socket.io");
 
 const app = express();
-
 const httpServer = createServer(app);
-
 const io = new Server(httpServer, {
   /* options */
   cors: {
@@ -17,17 +15,12 @@ const io = new Server(httpServer, {
   },
 });
 
-app.use((req, res, next) => {
-  req.io = io;
-  next();
+io.on("connection", (socket) => {
+  console.log(`user ${socket.id} connected`);
 });
 
-io.on("connection", (socket) => {
-  console.log("a user connected");
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
-  });
-});
+// Require all new routes here
+require("./src/routes/game.route")(app, io);
 
 db.connect(function (err) {
   if (err) {

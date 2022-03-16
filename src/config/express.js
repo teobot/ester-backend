@@ -18,7 +18,7 @@ const allowCrossOriginRequests = (req, res, next) => {
   next();
 };
 
-module.exports = function (io) {
+module.exports = function () {
   const app = express();
 
   app.use(express.json());
@@ -33,9 +33,6 @@ module.exports = function (io) {
   app.get("/api/" + version, function (req, res) {
     return res.send({ msg: "Server up" });
   });
-
-  // Require all new routes here
-  require("../routes/game.route")(app);
 
   return app;
 };

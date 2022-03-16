@@ -8,7 +8,13 @@ const requireGame = require("../middlewares/requireGame");
 const requireCreator = require("../middlewares/requireCreator");
 const requireUser = require("../middlewares/requireUser");
 
-module.exports = function (app) {
+module.exports = function (app, io) {
+  // assign io to all routes
+  app.use((req, res, next) => {
+    req.io = io;
+    next();
+  });
+
   // Get game and pass io to the controller function
   app
     .route("/api/" + version + "/get/game")
