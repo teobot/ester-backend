@@ -64,6 +64,57 @@ const createGame = async (req, res) => {
   }
 };
 
+const updateGameStep = async (req, res) => {
+  //  - updateGameStep
+  try {
+    req.game.step = req.body.step;
+
+    req.io.sockets.emit(req.game._id, {
+      type: "game:update",
+    });
+
+    await req.game.save();
+
+    return await getGame(req, res);
+  } catch (err) {
+    return res.status(422).send({ error: err.message });
+  }
+};
+
+const updateGameMin = async (req, res) => {
+  //  - updateGameMin
+  try {
+    req.game.minVote = req.body.min;
+
+    req.io.sockets.emit(req.game._id, {
+      type: "game:update",
+    });
+
+    await req.game.save();
+
+    return await getGame(req, res);
+  } catch (err) {
+    return res.status(422).send({ error: err.message });
+  }
+};
+
+const updateGameMax = async (req, res) => {
+  //  - updateGameMax
+  try {
+    req.game.maxVote = req.body.max;
+
+    req.io.sockets.emit(req.game._id, {
+      type: "game:update",
+    });
+
+    await req.game.save();
+
+    return await getGame(req, res);
+  } catch (err) {
+    return res.status(422).send({ error: err.message });
+  }
+};
+
 const revealAnswer = async (req, res) => {
   //  - reveals the estimate to the job
   try {
@@ -214,6 +265,19 @@ const kickUserFromGame = async (req, res) => {
   }
 };
 
+const forceUpdateGame = async (req, res) => {
+  //  - forceUpdateGame
+  try {
+    await req.io.sockets.emit(req.game._id, {
+      type: "game:update",
+    });
+
+    return await getGame(req, res);
+  } catch (err) {
+    return res.status(422).send({ error: err.message });
+  }
+};
+
 module.exports = {
   createGame,
   revealAnswer,
@@ -222,4 +286,8 @@ module.exports = {
   joinGame,
   userVote,
   kickUserFromGame,
+  updateGameStep,
+  updateGameMin,
+  updateGameMax,
+  forceUpdateGame
 };
