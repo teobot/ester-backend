@@ -52,4 +52,24 @@ module.exports = function (app, io) {
   app
     .route("/api/" + version + "/game/user/remove")
     .post(requireGame, requireCreator, controller.kickUserFromGame);
+
+  // update game step
+  app
+    .route("/api/" + version + "/game/step")
+    .post(requireGame, requireCreator, controller.updateGameStep);
+
+  // update game min
+  app
+    .route("/api/" + version + "/game/min")
+    .post(requireGame, requireCreator, controller.updateGameMin);
+
+  // update game max
+  app
+    .route("/api/" + version + "/game/max")
+    .post(requireGame, requireCreator, controller.updateGameMax);
+
+  // force update game
+  app
+    .route("/api/" + version + "/game/force")
+    .post(requireGame, requireCreator, controller.forceUpdateGame);
 };
