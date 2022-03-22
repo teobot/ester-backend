@@ -25,6 +25,18 @@ const GameSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  minVote: {
+    type: Number,
+    default: 0.5,
+  },
+  maxVote: {
+    type: Number,
+    default: 4,
+  },
+  step: {
+    type: Number,
+    default: 0.5,
+  },
 });
 
 GameSchema.methods.returnSafe = function (options = null) {
