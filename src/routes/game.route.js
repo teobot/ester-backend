@@ -72,4 +72,9 @@ module.exports = function (app, io) {
   app
     .route("/api/" + version + "/game/force")
     .post(requireGame, requireCreator, controller.forceUpdateGame);
+
+  // undo a users vote
+  app
+    .route("/api/" + version + "/user/vote/undo")
+    .post(requireGame, requireUser, controller.undoVote);
 };
