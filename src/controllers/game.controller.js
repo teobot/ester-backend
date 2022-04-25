@@ -197,9 +197,19 @@ const joinGame = async (req, res) => {
   try {
     const { name } = req.body;
 
+    // take a random colour from the game colours list
+    const userSelectedColour =
+      req.game.availableColors[req.game.availableColors.length - 1];
+
+    // remove the colour from the list
+    req.game.availableColors.splice(
+      req.game.availableColors.indexOf(userSelectedColour),
+      1
+    );
+
     const user = new User({
       name,
-      color: colors[Math.floor(Math.random() * colors.length)],
+      color: userSelectedColour,
     });
 
     req.game.users.push(user);
@@ -238,6 +248,32 @@ const userVote = async (req, res) => {
 
     await req.io.sockets.emit(req.game._id, {
       type: "user:vote",
+    });
+
+    return await getGame(req, res);
+  } catch (err) {
+    return res.status(422).send({ error: err.message });
+  }
+};
+
+const undoVote = async (req, res) => {
+  // - undo vote for a user
+  try {
+    const { userId } = req.body;
+
+    // update if the user has voted
+    req.game.users.map((user) => {
+      if (user._id.toString() === userId) {
+        user.voted = false;
+      }
+    });
+
+    req.game.markModified("users");
+
+    await req.game.save();
+
+    await req.io.sockets.emit(req.game._id, {
+      type: "game:update",
     });
 
     return await getGame(req, res);
@@ -289,5 +325,6 @@ module.exports = {
   updateGameStep,
   updateGameMin,
   updateGameMax,
-  forceUpdateGame
+  forceUpdateGame,
+  undoVote,
 };
