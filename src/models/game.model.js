@@ -42,11 +42,9 @@ const GameSchema = new mongoose.Schema({
     default: [
       {
         value: 0.1,
-        label: "0.1",
       },
       {
         value: 0.25,
-        label: "0.25",
       },
     ],
   },
