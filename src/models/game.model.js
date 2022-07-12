@@ -37,6 +37,19 @@ const GameSchema = new mongoose.Schema({
     type: Number,
     default: 0.5,
   },
+  additionMarker: {
+    type: Array,
+    default: [
+      {
+        value: 0.1,
+        label: "0.1",
+      },
+      {
+        value: 0.25,
+        label: "0.25",
+      },
+    ],
+  },
   availableColors: {
     type: [String],
     default: [
